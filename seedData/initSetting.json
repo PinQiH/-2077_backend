@@ -1,0 +1,506 @@
+{
+  "usersList": [
+    {
+      "username": "Cassie",
+      "account_status": 0,
+      "email": "Cassie@example.com",
+      "password": "Aa123456"
+    }
+  ],
+  "backendUsersList": [
+    {
+      "backend_user_account": "admin1",
+      "account_status": 0,
+      "email": "admin1@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "user",
+      "account_status": 0,
+      "email": "user@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "manager1",
+      "account_status": 0,
+      "email": "manager1@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "manager2",
+      "account_status": 0,
+      "email": "manager2@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "manager3",
+      "account_status": 0,
+      "email": "manager3@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "manager4",
+      "account_status": 0,
+      "email": "manager4@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "manager5",
+      "account_status": 0,
+      "email": "manager5@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "manager6",
+      "account_status": 0,
+      "email": "manager6@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "manager7",
+      "account_status": 0,
+      "email": "manager7@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "root1",
+      "account_status": 0,
+      "email": "root1@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "guest1",
+      "account_status": 0,
+      "email": "guest1@example.com",
+      "password": "St@ge123456"
+    },
+    {
+      "backend_user_account": "BOAdmin",
+      "account_status": -1,
+      "email": "BOAdmin@example.com",
+      "password": "Ej03xu#m06"
+    },
+    {
+      "backend_user_account": "Alston",
+      "account_status": 0,
+      "email": "Alston@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Cassie",
+      "account_status": 0,
+      "email": "Cassie@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Bumble",
+      "account_status": 0,
+      "email": "Bumble@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Davis",
+      "account_status": 0,
+      "email": "Davis@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Jack",
+      "account_status": 0,
+      "email": "Jack@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Lina",
+      "account_status": 0,
+      "email": "Lina@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Elena",
+      "account_status": 0,
+      "email": "Elena@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Evonne",
+      "account_status": 0,
+      "email": "Evonne@example.com",
+      "password": "Aa123456"
+    },
+    {
+      "backend_user_account": "Jason",
+      "account_status": 0,
+      "email": "Jason@example.com",
+      "password": "Aa123456"
+    }
+  ],
+  "UserRolesList": [
+    {
+      "role_id": 1,
+      "backend_user_account": "admin1"
+    }
+  ],
+  "rolesList": [
+    {
+      "role_name": "Admin"
+    },
+    {
+      "role_name": "Editor"
+    },
+    {
+      "role_name": "Reviewer"
+    },
+    {
+      "role_name": "Guest"
+    }
+  ],
+  "RolePermissionsList": [
+    {
+      "role_id": 1,
+      "permission_id": 1
+    },
+    {
+      "role_id": 1,
+      "permission_id": 2
+    },
+    {
+      "role_id": 1,
+      "permission_id": 3
+    },
+    {
+      "role_id": 1,
+      "permission_id": 4
+    },
+    {
+      "role_id": 1,
+      "permission_id": 5
+    },
+    {
+      "role_id": 1,
+      "permission_id": 6
+    },
+    {
+      "role_id": 1,
+      "permission_id": 7
+    },
+    {
+      "role_id": 1,
+      "permission_id": 8
+    },
+    {
+      "role_id": 1,
+      "permission_id": 9
+    },
+    {
+      "role_id": 1,
+      "permission_id": 10
+    },
+    {
+      "role_id": 1,
+      "permission_id": 11
+    },
+    {
+      "role_id": 1,
+      "permission_id": 12
+    },
+    {
+      "role_id": 1,
+      "permission_id": 14
+    },
+    {
+      "role_id": 1,
+      "permission_id": 15
+    },
+    {
+      "role_id": 1,
+      "permission_id": 16
+    },
+    {
+      "role_id": 1,
+      "permission_id": 17
+    },
+    {
+      "role_id": 1,
+      "permission_id": 18
+    },
+    {
+      "role_id": 1,
+      "permission_id": 19
+    }
+  ],
+  "permissionsList": [
+    {
+      "permission_id": 1,
+      "parent_permission_id": null,
+      "permission_sequence": 1,
+      "permission_type": "page",
+      "permission_name": "總資料庫區列表頁",
+      "admin_only": false
+    },
+    {
+      "permission_id": 2,
+      "parent_permission_id": 1,
+      "permission_sequence": 100,
+      "permission_type": "btn",
+      "permission_name": "移入編輯區",
+      "admin_only": false
+    },
+    {
+      "permission_id": 3,
+      "parent_permission_id": 1,
+      "permission_sequence": 700,
+      "permission_type": "btn",
+      "permission_name": "移入編輯區-單筆",
+      "admin_only": false
+    },
+    {
+      "permission_id": 4,
+      "parent_permission_id": 1,
+      "permission_sequence": 300,
+      "permission_type": "btn",
+      "permission_name": "匯出選取詞條",
+      "admin_only": false
+    },
+    {
+      "permission_id": 5,
+      "parent_permission_id": 1,
+      "permission_sequence": 400,
+      "permission_type": "btn",
+      "permission_name": "選取詞條上架",
+      "admin_only": false
+    },
+    {
+      "permission_id": 6,
+      "parent_permission_id": 1,
+      "permission_sequence": 500,
+      "permission_type": "btn",
+      "permission_name": "選取詞條下架",
+      "admin_only": false
+    },
+    {
+      "permission_id": 7,
+      "parent_permission_id": 1,
+      "permission_sequence": 600,
+      "permission_type": "btn",
+      "permission_name": "選取詞條刪除",
+      "admin_only": false
+    },
+    {
+      "permission_id": 8,
+      "parent_permission_id": 1,
+      "permission_sequence": 800,
+      "permission_type": "btn",
+      "permission_name": "選取詞條刪除-單筆",
+      "admin_only": false
+    },
+    {
+      "permission_id": 9,
+      "parent_permission_id": 1,
+      "permission_sequence": 900,
+      "permission_type": "btn",
+      "permission_name": "上/下架-單筆",
+      "admin_only": false
+    },
+    {
+      "permission_id": 10,
+      "parent_permission_id": null,
+      "permission_sequence": 2,
+      "permission_type": "page",
+      "permission_name": "編輯區列表頁",
+      "admin_only": false
+    },
+    {
+      "permission_id": 11,
+      "parent_permission_id": 10,
+      "permission_sequence": 100,
+      "permission_type": "btn",
+      "permission_name": "新增字詞",
+      "admin_only": false
+    },
+    {
+      "permission_id": 12,
+      "parent_permission_id": 10,
+      "permission_sequence": 200,
+      "permission_type": "btn",
+      "permission_name": "批次匯入",
+      "admin_only": false
+    },
+    {
+      "permission_id": 14,
+      "parent_permission_id": null,
+      "permission_sequence": 3,
+      "permission_type": "page",
+      "permission_name": "檢核區列表頁",
+      "admin_only": false
+    },
+    {
+      "permission_id": 15,
+      "parent_permission_id": null,
+      "permission_sequence": 4,
+      "permission_type": "page",
+      "permission_name": "角色列表頁",
+      "admin_only": true
+    },
+    {
+      "permission_id": 16,
+      "parent_permission_id": null,
+      "permission_sequence": 5,
+      "permission_type": "page",
+      "permission_name": "後台帳號列表頁",
+      "admin_only": true
+    },
+    {
+      "permission_id": 17,
+      "parent_permission_id": null,
+      "permission_sequence": 6,
+      "permission_type": "page",
+      "permission_name": "前台網頁調整",
+      "admin_only": false
+    },
+    {
+      "permission_id": 18,
+      "parent_permission_id": 17,
+      "permission_sequence": 100,
+      "permission_type": "page",
+      "permission_name": "最新消息",
+      "admin_only": false
+    },
+    {
+      "permission_id": 19,
+      "parent_permission_id": 17,
+      "permission_sequence": 200,
+      "permission_type": "page",
+      "permission_name": "使用說明",
+      "admin_only": false
+    },
+    {
+      "permission_id": 20,
+      "parent_permission_id": null,
+      "permission_sequence": 7,
+      "permission_type": "page",
+      "permission_name": "圖檔資料庫",
+      "admin_only": false
+    },
+    {
+      "permission_id": 21,
+      "parent_permission_id": null,
+      "permission_sequence": 8,
+      "permission_type": "page",
+      "permission_name": "音檔資料庫",
+      "admin_only": false
+    },
+    {
+      "permission_id": 22,
+      "parent_permission_id": null,
+      "permission_sequence": 9,
+      "permission_type": "page",
+      "permission_name": "字音對應表",
+      "admin_only": false
+    },
+    {
+      "permission_id": 23,
+      "parent_permission_id": null,
+      "permission_sequence": 10,
+      "permission_type": "page",
+      "permission_name": "IP管理",
+      "admin_only": false
+    },
+    {
+      "permission_id": 24,
+      "parent_permission_id": null,
+      "permission_sequence": 11,
+      "permission_type": "page",
+      "permission_name": "審核群組管理",
+      "admin_only": false
+    }
+  ],
+  "loginHistoriesList": [
+    {
+      "backend_user_account": "user",
+      "ip_address": "192.168.1.1",
+      "login_status": 0
+    }
+  ],
+  "ipWhitelists": [
+    {
+      "name": "test1",
+      "single_ip": "192.168.1.1",
+      "ip_start": null,
+      "ip_end": null,
+      "ip_status": 0,
+      "creator": "user",
+      "editor": "user"
+    },
+    {
+      "name": "test2",
+      "single_ip": null,
+      "ip_start": "192.168.1.2",
+      "ip_end": "192.168.1.20",
+      "ip_status": 0,
+      "creator": "user",
+      "editor": "user"
+    }
+  ],
+  "userIPWhitelists": [
+    {
+      "backend_user_account": "admin1",
+      "whitelist_id": 1,
+      "creator": "manager1",
+      "editor": "manager1"
+    },
+    {
+      "backend_user_account": "user",
+      "whitelist_id": 2,
+      "creator": "manager1",
+      "editor": "manager1"
+    }
+  ],
+  "AuditGroups": [
+    {
+      "audit_group_name": "白博",
+      "audit_user_account": "admin1",
+      "agent_user_account": null,
+      "creator": "user",
+      "editor": "user"
+    },
+    {
+      "audit_group_name": "主任",
+      "audit_user_account": "manager1",
+      "agent_user_account": null,
+      "creator": "user",
+      "editor": "user"
+    }
+  ],
+  "AuditGroupDetails": [
+    {
+      "audit_group_id": 1,
+      "word_manager_user_account": "manager2"
+    },
+    {
+      "audit_group_id": 2,
+      "word_manager_user_account": "manager3"
+    }
+  ],
+  "settingList": [
+    {
+      "setting_name": "IPWhiteList",
+      "setting_value": "N"
+    },
+    {
+      "setting_name": "RestartJob",
+      "setting_value": "N"
+    }
+  ],
+  "userProfilesList": [
+    {
+      "user_id": 1,
+      "contact_person_name": "John Doe",
+      "contact_phone_office": "123456789",
+      "contact_phone_mobile": "987654321",
+      "contact_department": "IT 部門",
+      "contact_position": "經理",
+      "contact_email": "Cassie_Huang@syscom.com.tw"
+    }
+  ]
+}

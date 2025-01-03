@@ -1,0 +1,30 @@
+{
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "editor.formatOnSave": true,
+  "eslint.options": {
+    "rules": {
+      "quotes": ["error", "single"],
+      "semi": ["error", "never"]
+    }
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "prettier.semi": false,
+  "prettier.singleQuote": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.options": {
+    "baseConfig": {
+      "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+      "rules": {
+        "quotes": ["error", "single"],
+        "semi": ["error", "never"]
+      }
+    }
+  }
+}
