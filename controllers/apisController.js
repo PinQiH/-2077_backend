@@ -189,6 +189,13 @@ module.exports = {
 
       validateInput([
         {
+          labelName: "商品ID",
+          inputName: "productId",
+          inputValue: productId,
+          validateWay: "isNumber",
+          isRequired: false,
+        },
+        {
           labelName: "商品名稱",
           inputName: "name",
           inputValue: name,
@@ -306,6 +313,16 @@ module.exports = {
     try {
       const productId = req.params.productId
 
+      validateInput([
+        {
+          labelName: "商品ID",
+          inputName: "productId",
+          inputValue: productId,
+          validateWay: "isNumber",
+          isRequired: false,
+        },
+      ])
+
       const existingProduct = await repository.generalRepo.findOne(
         { product_id: productId },
         "Product"
@@ -359,6 +376,136 @@ module.exports = {
   },
 
   // -訂單管理
+  // 新增訂單"createOrders"
+  createOrders: async (req, res, next) => {
+    const transaction = await db.sequelize.transaction()
+    let transactionCommitted = false
+    try {
+      let { orderDate = new Date(), status = "待處理", notes, items } = req.body
+      if (typeof items === "string") {
+        items = JSON.parse(items)
+      }
+
+      validateInput([
+        {
+          labelName: "訂單日期",
+          inputName: "orderDate",
+          inputValue: orderDate,
+          validateWay: "isDate",
+          isRequired: true,
+        },
+        {
+          labelName: "訂單狀態",
+          inputName: "status",
+          inputValue: status,
+          validateWay: "isString",
+          isRequired: true,
+        },
+        {
+          labelName: "備註",
+          inputName: "notes",
+          inputValue: notes,
+          validateWay: "isString",
+          isRequired: false,
+        },
+        {
+          labelName: "訂單內容",
+          inputName: "items",
+          inputValue: items,
+          validateWay: "isArray",
+          isRequired: true,
+        },
+      ])
+
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        if (!transactionCommitted) {
+          await transaction.rollback()
+        }
+        return res.status(200).json({
+          rtnCode: "0001",
+          rtnMsg: "訂單需包含至少一個商品項目",
+        })
+      }
+
+      // 搜尋 items 中每個 product 的價格並計算總金額
+      let total = 0
+      let itemDatas = []
+      for (const item of items) {
+        const { productId, quantity } = item
+
+        // 查詢商品價格
+        const product = await repository.generalRepo.findOne(
+          { product_id: productId },
+          "Product",
+          transaction
+        )
+        if (!product) {
+          if (!transactionCommitted) {
+            await transaction.rollback()
+          }
+          return res.status(404).json({
+            rtnCode: "0002",
+            rtnMsg: `商品不存在`,
+          })
+        }
+
+        const itemTotal = product.price * quantity
+        total += itemTotal
+
+        const itemData = {
+          // order_id: newOrder.order_id,
+          product_id: productId,
+          quantity,
+          cost_price: product.cost_price,
+          price: product.price,
+          subtotal: product.price * quantity,
+        }
+        itemDatas.push(itemData)
+      }
+
+      // 創建訂單資料
+      const data = {
+        order_date: orderDate,
+        total: total,
+        status: status,
+        notes: notes,
+      }
+      const newOrder = await repository.generalRepo.create(
+        data,
+        "Order",
+        transaction
+      )
+
+      // 創建訂單項目資料
+      const orderItems = itemDatas.map((item) => ({
+        order_id: newOrder.order_id,
+        product_id: item.product_id,
+        quantity: item.quantity,
+        cost_price: item.cost_price,
+        price: item.price,
+        subtotal: item.subtotal,
+      }))
+      await repository.generalRepo.bulkCreate(
+        orderItems,
+        "OrderItem",
+        transaction
+      )
+
+      await transaction.commit()
+      transactionCommitted = true
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "訂單新增成功",
+      })
+    } catch (err) {
+      if (!transactionCommitted) {
+        await transaction.rollback()
+      }
+      err.code = "CREATE_ORDERS_ERROR"
+      next(err)
+    }
+  },
   // 列出所有訂單"getOrders"
   getOrders: async (req, res, next) => {
     try {

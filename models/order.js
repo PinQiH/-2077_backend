@@ -19,7 +19,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       order_date: DataTypes.DATE,
       total: DataTypes.DECIMAL,
-      status: DataTypes.STRING,
+      status: {
+        type: DataTypes.ENUM(
+          "待處理",
+          "連線中",
+          "準備出貨",
+          "已出貨",
+          "完成",
+          "取消"
+        ),
+        allowNull: false, // 確保不能為 NULL
+        defaultValue: "待處理", // 設定預設值
+      },
       notes: DataTypes.TEXT,
     },
     {

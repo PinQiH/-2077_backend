@@ -31,6 +31,8 @@ router.delete(
 router.get("/admin/products", operateLogger, apisControllerV1["getProducts"])
 
 // -訂單管理
+// 新增訂單
+router.post("/admin/orders", operateLogger, apisControllerV1["createOrders"])
 // 列出所有訂單
 router.get("/admin/orders", operateLogger, apisControllerV1["getOrders"])
 // 查看訂單詳情

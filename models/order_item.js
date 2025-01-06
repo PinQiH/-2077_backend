@@ -17,6 +17,8 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
+      order_id: DataTypes.INTEGER,
+      product_id: DataTypes.INTEGER,
       quantity: DataTypes.INTEGER,
       cost_price: DataTypes.DECIMAL,
       price: DataTypes.DECIMAL,
