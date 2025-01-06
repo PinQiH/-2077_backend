@@ -193,7 +193,7 @@ module.exports = {
           inputName: "productId",
           inputValue: productId,
           validateWay: "isNumber",
-          isRequired: false,
+          isRequired: true,
         },
         {
           labelName: "商品名稱",
@@ -319,7 +319,7 @@ module.exports = {
           inputName: "productId",
           inputValue: productId,
           validateWay: "isNumber",
-          isRequired: false,
+          isRequired: true,
         },
       ])
 
@@ -547,12 +547,22 @@ module.exports = {
   // 查看訂單詳情"getOrderDetails"
   getOrderDetails: async (req, res, next) => {
     try {
-      const orderId = req.params.id
-      const order = await db.Order.findOne({ where: { id: orderId } })
+      const orderId = req.params.orderId
 
+      validateInput([
+        {
+          labelName: "訂單ID",
+          inputName: "orderId",
+          inputValue: orderId,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
+      ])
+
+      const order = await repository.orderRepo.getOrderDetails(orderId)
       if (!order) {
-        return res.status(404).json({
-          rtnCode: "4001",
+        return res.status(200).json({
+          rtnCode: "0001",
           rtnMsg: "訂單未找到",
         })
       }

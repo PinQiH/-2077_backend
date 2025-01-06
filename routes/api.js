@@ -37,7 +37,7 @@ router.post("/admin/orders", operateLogger, apisControllerV1["createOrders"])
 router.get("/admin/orders", operateLogger, apisControllerV1["getOrders"])
 // 查看訂單詳情
 router.get(
-  "/admin/orders/:id",
+  "/admin/orders/:orderId",
   operateLogger,
   apisControllerV1["getOrderDetails"]
 )

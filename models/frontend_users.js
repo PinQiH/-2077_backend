@@ -4,7 +4,9 @@ const generateHooks = require("@utils/dateHook")
 
 module.exports = (sequelize, DataTypes) => {
   class Frontend_users extends Model {
-    static associate(models) {}
+    static associate(models) {
+      this.hasMany(models.Order, { foreignKey: "order_by" })
+    }
   }
 
   Frontend_users.init(

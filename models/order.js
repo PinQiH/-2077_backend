@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.OrderItem, { foreignKey: "order_id" })
       this.hasMany(models.Transaction, { foreignKey: "order_id" })
+      this.belongsTo(models.Frontend_users, { foreignKey: "order_by" })
     }
   }
   Order.init(
