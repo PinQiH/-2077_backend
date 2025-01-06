@@ -41,11 +41,11 @@ router.get(
   operateLogger,
   apisControllerV1["getOrderDetails"]
 )
-// 更新訂單狀態
+// 更新訂單
 router.put(
-  "/admin/orders/:id/status",
+  "/admin/orders/:orderId",
   operateLogger,
-  apisControllerV1["updateOrderStatus"]
+  apisControllerV1["updateOrder"]
 )
 // 刪除訂單
 router.delete(

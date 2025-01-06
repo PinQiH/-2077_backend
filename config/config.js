@@ -7,7 +7,7 @@ module.exports = {
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
     dialect: "postgres",
-    logging: false,
+    logging: true,
     pool: {
       max: 1000, // 最大同時連線數量
       min: 0, // 最少保留連線數量

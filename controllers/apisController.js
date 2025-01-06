@@ -456,7 +456,7 @@ module.exports = {
           if (!transactionCommitted) {
             await transaction.rollback()
           }
-          return res.status(404).json({
+          return res.status(200).json({
             rtnCode: "0002",
             rtnMsg: `商品不存在`,
           })
@@ -577,29 +577,134 @@ module.exports = {
       next(err)
     }
   },
-  // 更新訂單狀態"updateOrderStatus"
-  updateOrderStatus: async (req, res, next) => {
+  // 更新訂單"updateOrderStatus"
+  updateOrder: async (req, res, next) => {
+    const transaction = await db.sequelize.transaction()
+    let transactionCommitted = false
     try {
-      const orderId = req.params.id
-      const { status } = req.body
+      const orderId = req.params.orderId
+      let { status, notes, items } = req.body
+      if (typeof items === "string") {
+        items = JSON.parse(items)
+      }
 
-      const updatedOrder = await db.Order.update(
-        { status },
-        { where: { id: orderId } }
+      validateInput([
+        {
+          labelName: "訂單ID",
+          inputName: "orderId",
+          inputValue: orderId,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
+        {
+          labelName: "訂單狀態",
+          inputName: "status",
+          inputValue: status,
+          validateWay: "isString",
+          isRequired: false,
+        },
+        {
+          labelName: "備註",
+          inputName: "notes",
+          inputValue: notes,
+          validateWay: "isString",
+          isRequired: false,
+        },
+        {
+          labelName: "訂單內容",
+          inputName: "items",
+          inputValue: items,
+          validateWay: "isArray",
+          isRequired: true,
+        },
+      ])
+
+      // 查詢訂單是否存在
+      const order = await repository.generalRepo.findOne(
+        { order_id: orderId },
+        "Order",
+        transaction
       )
-
-      if (!updatedOrder) {
-        return res.status(404).json({
-          rtnCode: "4001",
+      if (!order) {
+        await transaction.rollback()
+        return res.status(200).json({
+          rtnCode: "0001",
           rtnMsg: "訂單未找到",
         })
       }
+
+      // 搜尋 items 中每個 product 的價格並計算總金額
+      let total = 0
+      let itemDatas = []
+      if (items && items.length > 0) {
+        // 刪除舊的訂單項目
+        await repository.generalRepo.destroy(
+          orderId,
+          "OrderItem",
+          "order_id",
+          transaction
+        )
+
+        for (const item of items) {
+          const { productId, quantity } = item
+
+          // 查詢商品價格
+          const product = await repository.generalRepo.findOne(
+            { product_id: productId },
+            "Product",
+            transaction
+          )
+          if (!product) {
+            if (!transactionCommitted) {
+              await transaction.rollback()
+            }
+            return res.status(200).json({
+              rtnCode: "0002",
+              rtnMsg: `商品不存在`,
+            })
+          }
+
+          const itemTotal = product.price * quantity
+          total += itemTotal
+
+          const itemData = {
+            order_id: orderId,
+            product_id: productId,
+            quantity: quantity,
+            cost_price: product.cost_price,
+            price: product.price,
+            subtotal: product.price * quantity,
+          }
+          itemDatas.push(itemData)
+        }
+      }
+
+      // 更新訂單資料
+      const updatedData = { status, notes, total }
+      await repository.generalRepo.update(
+        orderId,
+        updatedData,
+        "Order",
+        "order_id",
+        transaction
+      )
+      await repository.generalRepo.bulkCreate(
+        itemDatas,
+        "OrderItem",
+        transaction
+      )
+
+      await transaction.commit()
+      transactionCommitted = true
 
       return res.status(200).json({
         rtnCode: "0000",
         rtnMsg: "訂單狀態更新成功",
       })
     } catch (err) {
+      if (!transactionCommitted) {
+        await transaction.rollback()
+      }
       err.code = "UPDATE_ORDER_STATUS_ERROR"
       next(err)
     }
