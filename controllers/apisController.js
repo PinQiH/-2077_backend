@@ -712,15 +712,8 @@ module.exports = {
   // 刪除訂單"deleteOrder"
   deleteOrder: async (req, res, next) => {
     try {
-      const orderId = req.params.id
-      const deletedOrder = await db.Order.destroy({ where: { id: orderId } })
-
-      if (!deletedOrder) {
-        return res.status(404).json({
-          rtnCode: "4001",
-          rtnMsg: "訂單未找到",
-        })
-      }
+      const orderId = req.params.orderId
+      await repository.generalRepo.destroy(orderId, "Order", "order_id")
 
       return res.status(200).json({
         rtnCode: "0000",

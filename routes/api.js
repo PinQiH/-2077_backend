@@ -49,7 +49,7 @@ router.put(
 )
 // 刪除訂單
 router.delete(
-  "/admin/orders/:id",
+  "/admin/orders/:orderId",
   operateLogger,
   apisControllerV1["deleteOrder"]
 )
