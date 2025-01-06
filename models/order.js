@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
+      order_by: DataTypes.INTEGER,
       order_date: DataTypes.DATE,
       total: DataTypes.DECIMAL,
       status: {

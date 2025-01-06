@@ -381,12 +381,25 @@ module.exports = {
     const transaction = await db.sequelize.transaction()
     let transactionCommitted = false
     try {
-      let { orderDate = new Date(), status = "待處理", notes, items } = req.body
+      let {
+        orderBy,
+        orderDate = new Date(),
+        status = "待處理",
+        notes,
+        items,
+      } = req.body
       if (typeof items === "string") {
         items = JSON.parse(items)
       }
 
       validateInput([
+        {
+          labelName: "下單人",
+          inputName: "orderBy",
+          inputValue: orderBy,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
         {
           labelName: "訂單日期",
           inputName: "orderDate",
@@ -465,6 +478,7 @@ module.exports = {
 
       // 創建訂單資料
       const data = {
+        order_by: orderBy,
         order_date: orderDate,
         total: total,
         status: status,
@@ -509,22 +523,21 @@ module.exports = {
   // 列出所有訂單"getOrders"
   getOrders: async (req, res, next) => {
     try {
-      const { page = 1, limit = 10, status } = req.query
-      const whereClause = status ? { status } : {}
+      const { page = 1, size = 10 } = req.query
 
-      const orders = await db.Order.findAll({
-        where: whereClause,
-        offset: (page - 1) * limit,
-        limit: parseInt(limit),
-      })
-
-      const totalOrders = await db.Order.count({ where: whereClause })
+      const { count, rows, totalPages } =
+        await repository.generalRepo.findAndCountAll({}, "Order", page, size)
 
       return res.status(200).json({
         rtnCode: "0000",
         rtnMsg: "訂單列表",
-        data: orders,
-        total: totalOrders,
+        data: rows,
+        pagination: {
+          page: parseInt(page),
+          perPage: parseInt(size),
+          totalPages: totalPages,
+          totalCount: count,
+        },
       })
     } catch (err) {
       err.code = "GET_ORDERS_ERROR"
