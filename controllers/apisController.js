@@ -713,6 +713,17 @@ module.exports = {
   deleteOrder: async (req, res, next) => {
     try {
       const orderId = req.params.orderId
+
+      validateInput([
+        {
+          labelName: "訂單ID",
+          inputName: "orderId",
+          inputValue: orderId,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
+      ])
+
       await repository.generalRepo.destroy(orderId, "Order", "order_id")
 
       return res.status(200).json({
