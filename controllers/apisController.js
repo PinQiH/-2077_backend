@@ -736,53 +736,353 @@ module.exports = {
     }
   },
 
-  // -支付管理
-  // 創建支付請求"createPayment"
-  createPayment: async (req, res, next) => {
+  // -錢包管理
+  // 新增支出/收入
+  createTransaction: async (req, res, next) => {
     try {
-      const { orderId, amount, paymentMethod } = req.body
-      // 假設支付請求創建邏輯
-      const payment = await db.Payment.create({
-        orderId,
-        amount,
-        paymentMethod,
-      })
+      const { amount, type, description } = req.body
 
-      return res.status(201).json({
+      validateInput([
+        {
+          labelName: "金額",
+          inputName: "amount",
+          inputValue: amount,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
+        {
+          labelName: "類型",
+          inputName: "type",
+          inputValue: type,
+          validateWay: "isString",
+          isRequired: true,
+        },
+        {
+          labelName: "描述",
+          inputName: "description",
+          inputValue: description,
+          validateWay: "isString",
+          isRequired: false,
+        },
+      ])
+
+      await repository.generalRepo.create(
+        {
+          amount,
+          type,
+          description,
+        },
+        "Transaction"
+      )
+
+      return res.status(200).json({
         rtnCode: "0000",
-        rtnMsg: "支付請求創建成功",
-        data: payment,
+        rtnMsg: "新增交易成功",
       })
     } catch (err) {
-      err.code = "CREATE_PAYMENT_ERROR"
+      err.code = "CREATE_TRANSACTION_ERROR"
       next(err)
     }
   },
-  // 查詢支付狀態"getPaymentStatus"
-  getPaymentStatus: async (req, res, next) => {
+  // 刪除支出/收入
+  deleteTransaction: async (req, res, next) => {
     try {
-      const paymentId = req.params.id
-      const payment = await db.Payment.findOne({ where: { id: paymentId } })
+      const { transactionId } = req.params
 
-      if (!payment) {
-        return res.status(404).json({
-          rtnCode: "4001",
-          rtnMsg: "支付未找到",
+      validateInput([
+        {
+          labelName: "交易ID",
+          inputName: "transactionId",
+          inputValue: transactionId,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
+      ])
+
+      const deletedCount = await repository.generalRepo.destroy(
+        transactionId,
+        "Transaction",
+        "transaction_id"
+      )
+
+      if (!deletedCount) {
+        return res.status(200).json({
+          rtnCode: "0001",
+          rtnMsg: "交易不存在",
         })
       }
 
       return res.status(200).json({
         rtnCode: "0000",
-        rtnMsg: "支付狀態",
-        data: payment,
+        rtnMsg: "刪除交易成功",
       })
     } catch (err) {
-      err.code = "GET_PAYMENT_STATUS_ERROR"
+      err.code = "DELETE_TRANSACTION_ERROR"
+      next(err)
+    }
+  },
+  // 列出所有支出/收入
+  getAllTransactions: async (req, res, next) => {
+    try {
+      const { page = 1, size = 10 } = req.query
+
+      const { count, rows, totalPages } =
+        await repository.generalRepo.findAndCountAll(
+          {},
+          "Transaction",
+          page,
+          size
+        )
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "所有交易記錄",
+        data: rows,
+        pagination: {
+          page: parseInt(page),
+          perPage: parseInt(size),
+          totalPages: totalPages,
+          totalCount: count,
+        },
+      })
+    } catch (err) {
+      err.code = "GET_ALL_TRANSACTIONS_ERROR"
+      next(err)
+    }
+  },
+  // 結算利潤
+  calculateProfit: async (req, res, next) => {
+    try {
+      const profit = await repository.transactionRepo.calculateProfit()
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "結算利潤成功",
+        data: { profit },
+      })
+    } catch (err) {
+      err.code = "CALCULATE_PROFIT_ERROR"
+      next(err)
+    }
+  },
+
+  // -優惠券管理
+  // 新增優惠券
+  createCoupon: async (req, res, next) => {
+    try {
+      const { code, discount, expiryDate } = req.body
+
+      validateInput([
+        {
+          labelName: "代碼",
+          inputName: "code",
+          inputValue: code,
+          validateWay: "isString",
+          isRequired: true,
+        },
+        {
+          labelName: "折扣",
+          inputName: "discount",
+          inputValue: discount,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
+        {
+          labelName: "到期日",
+          inputName: "expiryDate",
+          inputValue: expiryDate,
+          validateWay: "isDate",
+          isRequired: true,
+        },
+      ])
+
+      const newCoupon = await db.Coupon.create({ code, discount, expiryDate })
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "新增優惠券成功",
+        data: newCoupon,
+      })
+    } catch (err) {
+      err.code = "CREATE_COUPON_ERROR"
+      next(err)
+    }
+  },
+  // 編輯優惠券
+  updateCoupon: async (req, res, next) => {
+    try {
+      const { couponId } = req.params
+      const { code, discount, expiryDate } = req.body
+
+      const updatedCount = await db.Coupon.update(
+        { code, discount, expiryDate },
+        { where: { id: couponId } }
+      )
+
+      if (!updatedCount[0]) {
+        return res.status(404).json({
+          rtnCode: "4001",
+          rtnMsg: "優惠券不存在",
+        })
+      }
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "更新優惠券成功",
+      })
+    } catch (err) {
+      err.code = "UPDATE_COUPON_ERROR"
+      next(err)
+    }
+  },
+  // 刪除優惠券
+  deleteCoupon: async (req, res, next) => {
+    try {
+      const { couponId } = req.params
+
+      const deletedCount = await db.Coupon.destroy({ where: { id: couponId } })
+
+      if (!deletedCount) {
+        return res.status(404).json({
+          rtnCode: "4001",
+          rtnMsg: "優惠券不存在",
+        })
+      }
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "刪除優惠券成功",
+      })
+    } catch (err) {
+      err.code = "DELETE_COUPON_ERROR"
+      next(err)
+    }
+  },
+  // 列出所有優惠券
+  getAllCoupons: async (req, res, next) => {
+    try {
+      const coupons = await db.Coupon.findAll()
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "所有優惠券",
+        data: coupons,
+      })
+    } catch (err) {
+      err.code = "GET_ALL_COUPONS_ERROR"
       next(err)
     }
   },
 
   // -報表與統計
+  // 總客數
+  getCustomerReport: async (req, res, next) => {
+    try {
+      const totalCustomers = await db.Customer.count()
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "總客數",
+        data: { totalCustomers },
+      })
+    } catch (err) {
+      err.code = "GET_CUSTOMER_REPORT_ERROR"
+      next(err)
+    }
+  },
+  // 總營業額
+  getRevenueReport: async (req, res, next) => {
+    try {
+      const totalRevenue = await db.Order.sum("total", {
+        where: { status: "完成" },
+      })
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "總營業額",
+        data: { totalRevenue },
+      })
+    } catch (err) {
+      err.code = "GET_REVENUE_REPORT_ERROR"
+      next(err)
+    }
+  },
+  // 總利潤
+  getProfitReport: async (req, res, next) => {
+    try {
+      // 查詢完成的訂單
+      const completedOrders = await db.Order.findAll({
+        where: { status: "完成" },
+        include: [
+          { model: db.OrderItem, attributes: ["cost_price", "subtotal"] },
+        ],
+      })
+
+      // 計算收入與成本
+      let totalRevenue = 0
+      let totalCost = 0
+
+      completedOrders.forEach((order) => {
+        order.OrderItems.forEach((item) => {
+          totalRevenue += parseFloat(item.subtotal || 0)
+          totalCost += parseFloat(item.cost_price * item.quantity || 0)
+        })
+      })
+
+      const totalProfit = totalRevenue - totalCost
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "總利潤報表",
+        data: {
+          totalRevenue,
+          totalCost,
+          totalProfit,
+        },
+      })
+    } catch (err) {
+      err.code = "GET_PROFIT_REPORT_ERROR"
+      next(err)
+    }
+  },
+  // 連線門檻
+  getThresholdReport: async (req, res, next) => {
+    try {
+      const threshold = 1500 // 預設連線門檻金額
+
+      // 查詢所有未完成的訂單
+      const pendingOrders = await db.Order.findAll({
+        where: { status: { [Op.ne]: "完成" } },
+      })
+
+      // 累計未完成訂單金額
+      let currentTotal = 0
+      pendingOrders.forEach((order) => {
+        currentTotal += parseFloat(order.total || 0)
+      })
+
+      // 計算達成比例和剩餘金額
+      const percentage = Math.min(
+        (currentTotal / threshold) * 100,
+        100
+      ).toFixed(2)
+      const remaining = Math.max(threshold - currentTotal, 0).toFixed(2)
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "連線門檻報表",
+        data: {
+          threshold,
+          currentTotal,
+          percentage: parseFloat(percentage),
+          remaining: parseFloat(remaining),
+        },
+      })
+    } catch (err) {
+      err.code = "GET_THRESHOLD_REPORT_ERROR"
+      next(err)
+    }
+  },
   // 訂單報表"getOrderReport"
   getOrderReport: async (req, res, next) => {
     try {
@@ -818,25 +1118,6 @@ module.exports = {
       })
     } catch (err) {
       err.code = "GET_PRODUCT_REPORT_ERROR"
-      next(err)
-    }
-  },
-  // 用戶活躍報表"getUserReport"
-  getUserReport: async (req, res, next) => {
-    try {
-      const { startDate, endDate } = req.query
-      // 假設用戶報表邏輯
-      const userReport = await db.User.findAll({
-        where: { createdAt: { [Op.between]: [startDate, endDate] } },
-      })
-
-      return res.status(200).json({
-        rtnCode: "0000",
-        rtnMsg: "用戶活躍報表",
-        data: userReport,
-      })
-    } catch (err) {
-      err.code = "GET_USER_REPORT_ERROR"
       next(err)
     }
   },

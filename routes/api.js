@@ -54,34 +54,86 @@ router.delete(
   apisControllerV1["deleteOrder"]
 )
 
-// -支付管理
-// 創建支付請求
-router.post("/admin/payments", operateLogger, apisControllerV1["createPayment"])
-// 查詢支付狀態
-router.get(
-  "/admin/payments/:id",
+// -錢包管理
+// 新增支出/收入
+router.post(
+  "/admin/wallet",
   operateLogger,
-  apisControllerV1["getPaymentStatus"]
+  apisControllerV1["createTransaction"]
+)
+// 刪除支出/收入
+router.delete(
+  "/admin/wallet/:transactionId",
+  operateLogger,
+  apisControllerV1["deleteTransaction"]
+)
+// 列出所有支出/收入
+router.get(
+  "/admin/wallet",
+  operateLogger,
+  apisControllerV1["getAllTransactions"]
+)
+// 結算利潤
+router.get(
+  "/admin/wallet/profit",
+  operateLogger,
+  apisControllerV1["calculateProfit"]
 )
 
+// -優惠券管理
+// 新增優惠券
+router.post("/admin/coupons", operateLogger, apisControllerV1["createCoupon"])
+// 編輯優惠券
+router.put(
+  "/admin/coupons/:couponId",
+  operateLogger,
+  apisControllerV1["updateCoupon"]
+)
+// 刪除優惠券
+router.delete(
+  "/admin/coupons/:couponId",
+  operateLogger,
+  apisControllerV1["deleteCoupon"]
+)
+// 列出所有優惠券
+router.get("/admin/coupons", operateLogger, apisControllerV1["getAllCoupons"])
+
 // -報表與統計
+// 總客數
+router.get(
+  "/admin/reports/customers",
+  operateLogger,
+  apisControllerV1["getCustomerReport"]
+)
+// 總營業額
+router.get(
+  "/admin/reports/revenue",
+  operateLogger,
+  apisControllerV1["getRevenueReport"]
+)
+// 總利潤
+router.get(
+  "/admin/reports/profit",
+  operateLogger,
+  apisControllerV1["getProfitReport"]
+)
+// 連線門檻
+router.get(
+  "/admin/reports/threshold",
+  operateLogger,
+  apisControllerV1["getThresholdReport"]
+)
 // 訂單報表
 router.get(
   "/admin/reports/orders",
   operateLogger,
   apisControllerV1["getOrderReport"]
 )
-// 商品銷售報表
+// 品牌銷售報表
 router.get(
-  "/admin/reports/products",
+  "/admin/reports/brands",
   operateLogger,
   apisControllerV1["getProductReport"]
-)
-// 用戶活躍報表
-router.get(
-  "/admin/reports/users",
-  operateLogger,
-  apisControllerV1["getUserReport"]
 )
 
 // -系統狀態檢查

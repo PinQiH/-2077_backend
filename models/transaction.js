@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       amount: DataTypes.DECIMAL,
-      type: DataTypes.STRING,
+      type: {
+        type: DataTypes.ENUM("IN", "OUT"),
+      },
       profit: DataTypes.DECIMAL,
       description: DataTypes.TEXT,
     },
