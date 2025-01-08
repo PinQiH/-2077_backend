@@ -172,6 +172,33 @@ module.exports = {
       next(err)
     }
   },
+  // 查看商品詳情
+  getProductDetails: async (req, res, next) => {
+    try {
+      const productId = req.params.productId
+
+      validateInput([
+        {
+          labelName: "商品ID",
+          inputName: "productId",
+          inputValue: productId,
+          validateWay: "isNumber",
+          isRequired: true,
+        },
+      ])
+
+      const product = await repository.productRepo.getProductDetails(productId)
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "查詢成功",
+        data: product,
+      })
+    } catch (err) {
+      err.code = "GET_PRODUCT_DETAILS_ERROR"
+      next(err)
+    }
+  },
   // 更新商品資訊"updateProduct"
   updateProduct: async (req, res, next) => {
     try {
