@@ -15,6 +15,7 @@ router.get(
   operateLogger,
   apisControllerV1["dbPoolConnectionTest"]
 )
+router.get("/update-product", operateLogger, apisControllerV1["updateProduct"])
 
 router.use(errorHandler)
 
