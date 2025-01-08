@@ -1078,16 +1078,13 @@ module.exports = {
   // 訂單報表"getOrderReport"
   getOrderReport: async (req, res, next) => {
     try {
-      const { startDate, endDate } = req.query
-      // 假設報表邏輯
-      const orderReport = await db.Order.findAll({
-        where: { createdAt: { [Op.between]: [startDate, endDate] } },
-      })
+      const year = req.query.year || new Date().getFullYear() // 默認為當前年份
+      const monthlyData = await repository.orderRepo.getMonthlyOrderReport(year)
 
       return res.status(200).json({
         rtnCode: "0000",
         rtnMsg: "訂單報表",
-        data: orderReport,
+        data: monthlyData,
       })
     } catch (err) {
       err.code = "GET_ORDER_REPORT_ERROR"
