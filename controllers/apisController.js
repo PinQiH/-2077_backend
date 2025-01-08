@@ -978,7 +978,10 @@ module.exports = {
   // 總客數
   getCustomerReport: async (req, res, next) => {
     try {
-      const totalCustomers = await db.Customer.count()
+      const totalCustomers = await repository.generalRepo.count(
+        {},
+        "Frontend_users"
+      )
 
       return res.status(200).json({
         rtnCode: "0000",
@@ -1004,44 +1007,6 @@ module.exports = {
       })
     } catch (err) {
       err.code = "GET_REVENUE_REPORT_ERROR"
-      next(err)
-    }
-  },
-  // 總利潤
-  getProfitReport: async (req, res, next) => {
-    try {
-      // 查詢完成的訂單
-      const completedOrders = await db.Order.findAll({
-        where: { status: "完成" },
-        include: [
-          { model: db.OrderItem, attributes: ["cost_price", "subtotal"] },
-        ],
-      })
-
-      // 計算收入與成本
-      let totalRevenue = 0
-      let totalCost = 0
-
-      completedOrders.forEach((order) => {
-        order.OrderItems.forEach((item) => {
-          totalRevenue += parseFloat(item.subtotal || 0)
-          totalCost += parseFloat(item.cost_price * item.quantity || 0)
-        })
-      })
-
-      const totalProfit = totalRevenue - totalCost
-
-      return res.status(200).json({
-        rtnCode: "0000",
-        rtnMsg: "總利潤報表",
-        data: {
-          totalRevenue,
-          totalCost,
-          totalProfit,
-        },
-      })
-    } catch (err) {
-      err.code = "GET_PROFIT_REPORT_ERROR"
       next(err)
     }
   },

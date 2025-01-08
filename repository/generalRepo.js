@@ -62,4 +62,11 @@ module.exports = {
       transaction,
     })
   },
+
+  async count(query = {}, model, transaction = null) {
+    return await db[model].count({
+      where: query,
+      transaction,
+    })
+  },
 }

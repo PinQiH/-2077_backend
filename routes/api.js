@@ -111,12 +111,6 @@ router.get(
   operateLogger,
   apisControllerV1["getRevenueReport"]
 )
-// 總利潤
-router.get(
-  "/admin/reports/profit",
-  operateLogger,
-  apisControllerV1["getProfitReport"]
-)
 // 連線門檻
 router.get(
   "/admin/reports/threshold",
