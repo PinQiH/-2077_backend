@@ -15,6 +15,12 @@ router.get("/test", operateLogger, apisControllerV1["test"])
 // -商品管理
 // 新增商品
 router.post("/admin/products", operateLogger, apisControllerV1["createProduct"])
+// 列出所有商品
+router.get(
+  "/admin/products/all",
+  operateLogger,
+  apisControllerV1["getAllProducts"]
+)
 // 查看商品詳情
 router.get(
   "/admin/products/:productId",
@@ -33,7 +39,7 @@ router.delete(
   operateLogger,
   apisControllerV1["deleteProduct"]
 )
-// 列出所有商品
+// 列出分頁商品
 router.get("/admin/products", operateLogger, apisControllerV1["getProducts"])
 
 // -訂單管理

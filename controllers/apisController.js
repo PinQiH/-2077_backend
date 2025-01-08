@@ -377,7 +377,7 @@ module.exports = {
       next(err)
     }
   },
-  // 列出所有商品"getProducts"
+  // 列出分頁商品"getProducts"
   getProducts: async (req, res, next) => {
     try {
       const { page = 1, size = 10 } = req.query
@@ -398,6 +398,21 @@ module.exports = {
       })
     } catch (err) {
       err.code = "GET_PRODUCTS_ERROR"
+      next(err)
+    }
+  },
+  // 列出所有商品
+  getAllProducts: async (req, res, next) => {
+    try {
+      const rows = await repository.generalRepo.findAll({}, "Product")
+
+      return res.status(200).json({
+        rtnCode: "0000",
+        rtnMsg: "全部商品",
+        data: rows,
+      })
+    } catch (err) {
+      err.code = "GET_ALL_PRODUCTS_ERROR"
       next(err)
     }
   },
