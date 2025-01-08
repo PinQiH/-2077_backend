@@ -996,9 +996,11 @@ module.exports = {
   // 總營業額
   getRevenueReport: async (req, res, next) => {
     try {
-      const totalRevenue = await db.Order.sum("total", {
-        where: { status: "完成" },
-      })
+      const totalRevenue = await repository.generalRepo.sum(
+        "total",
+        { status: "完成" },
+        "Order"
+      )
 
       return res.status(200).json({
         rtnCode: "0000",
@@ -1013,34 +1015,17 @@ module.exports = {
   // 連線門檻
   getThresholdReport: async (req, res, next) => {
     try {
-      const threshold = 1500 // 預設連線門檻金額
-
-      // 查詢所有未完成的訂單
-      const pendingOrders = await db.Order.findAll({
-        where: { status: { [Op.ne]: "完成" } },
-      })
-
-      // 累計未完成訂單金額
-      let currentTotal = 0
-      pendingOrders.forEach((order) => {
-        currentTotal += parseFloat(order.total || 0)
-      })
-
-      // 計算達成比例和剩餘金額
-      const percentage = Math.min(
-        (currentTotal / threshold) * 100,
-        100
-      ).toFixed(2)
-      const remaining = Math.max(threshold - currentTotal, 0).toFixed(2)
+      const threshold = await repository.generalRepo.sum(
+        "total",
+        { status: "待處理" },
+        "Order"
+      )
 
       return res.status(200).json({
         rtnCode: "0000",
         rtnMsg: "連線門檻報表",
         data: {
           threshold,
-          currentTotal,
-          percentage: parseFloat(percentage),
-          remaining: parseFloat(remaining),
         },
       })
     } catch (err) {

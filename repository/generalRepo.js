@@ -69,4 +69,11 @@ module.exports = {
       transaction,
     })
   },
+
+  async sum(field, query = {}, model, transaction = null) {
+    return await db[model].sum(field, {
+      where: query,
+      transaction,
+    })
+  },
 }
