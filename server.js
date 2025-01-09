@@ -11,6 +11,7 @@ const sequelize = db.sequelize
 const port = process.env.PORT || 3000
 const { sysErrorHandler, createLogger } = require("./middleware/errorHandler")
 const { productTasks } = require("@cronJobs/productTasks")
+const cors = require("cors")
 require("express-async-errors")
 
 const isDev = process.env.NODE_ENV === "development"
@@ -21,13 +22,23 @@ const keepAliveAgent = new Agent({
   timeout: 60000,
   freeSocketTimeout: 30000,
 })
-process.env.NODE_ENV === "development" &&
+if (process.env.NODE_ENV === "development") {
+  // Development 環境
   app.use(
-    require("cors")({
+    cors({
       origin: "*", // 允許所有網域
-      credentials: false,
+      credentials: false, // 不需要攜帶憑證
     })
   )
+} else {
+  // Production 環境
+  app.use(
+    cors({
+      origin: "https://2077-dashboard.onrender.com", // 允許的前端網址
+      credentials: true, // 啟用攜帶憑證（如果需要，例如 Cookies 或 Authorization Header）
+    })
+  )
+}
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(sysErrorHandler)
