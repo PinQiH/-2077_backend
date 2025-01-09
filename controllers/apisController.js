@@ -1067,7 +1067,7 @@ module.exports = {
         rtnCode: "0000",
         rtnMsg: "連線門檻報表",
         data: {
-          threshold,
+          threshold: threshold + 1,
         },
       })
     } catch (err) {
